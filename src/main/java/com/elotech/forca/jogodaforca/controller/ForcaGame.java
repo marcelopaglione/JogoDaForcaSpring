@@ -9,6 +9,7 @@ public class ForcaGame {
 
     private Forca forca;
     private final char letraParaAdivinhar = '_';
+    private String id;
 
     public ForcaGame(int totalDeJogadas) {
         forca = new Forca();
@@ -51,6 +52,9 @@ public class ForcaGame {
                 mensagem = "Letra " + letra + " já foi informada!";
                 returnMessage.setStatus(HttpStatus.ALREADY_REPORTED);
             }
+            if(fimDeJogo()){
+                mensagem = "Fim de jogo, você perdeu!";
+            }
 
         }else{
             mensagem = "Fim de jogo, você perdeu!";
@@ -71,7 +75,7 @@ public class ForcaGame {
     }
 
     public JogoStatus getTotalTentativasRestantes() {
-        return new JogoStatus("Você ainda tem " + totalTentativasRestantes() + " tentativas restantes");
+        return new JogoStatus(totalTentativasRestantes()+"");
     }
 
     public void criarNovoJogo(String palavraSecreta, int totalDeJogadas){
@@ -89,7 +93,7 @@ public class ForcaGame {
     }
 
     private boolean perdeuJogo(){
-        return totalTentativasRestantes() <= 1;
+        return totalTentativasRestantes() == 0;
     }
 
     public JogoStatus jogoStatus() {
@@ -113,5 +117,13 @@ public class ForcaGame {
 
     private char letraNormalizada(char letra){
         return Character.toUpperCase(letra);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
