@@ -52,14 +52,20 @@ public class ForcaEndpoint {
         validRequest(novoJogo);
         ForcaGame forcaGame = findGame(headers);
         if(forcaGame == null) {
-            ForcaGame newGame = new ForcaGame(5);
-            newGame.setId(headers.get("user-agent").get(0));
-            System.out.println("new game for: " + newGame.getId());
-            newGame.criarNovoJogo(novoJogo.getPalavra(), novoJogo.getQuantidadeDeJogadas());
-            this.forcaGames.add(newGame);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            createNewGame(novoJogo, headers);
+        } else {
+            this.forcaGames.remove(forcaGame);
+            createNewGame(novoJogo, headers);
         }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    private void createNewGame(@RequestBody NovoJogo novoJogo, @RequestHeader HttpHeaders headers) {
+        ForcaGame newGame = new ForcaGame(5);
+        newGame.setId(headers.get("user-agent").get(0));
+        System.out.println("new game for: " + newGame.getId());
+        newGame.criarNovoJogo(novoJogo.getPalavra(), novoJogo.getQuantidadeDeJogadas());
+        this.forcaGames.add(newGame);
     }
 
     @GetMapping(path = "informar/tentativasRestantes/")
